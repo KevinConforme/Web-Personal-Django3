@@ -1,0 +1,39 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+form{
+    margin: auto;
+	max-width: 450px;
+    padding: 10px;    
+    border-radius: 20px;
+	border: 1px solid rgba(0,0,0,0.9);
+}
+#link{
+    color: gold;
+}
+#q{
+    color: red;
+}
+#w{
+    color: blue;
+}
+#z{
+    color: blanchedalmond;
+}
+#a{
+    color: red;
+}
+#b{
+    color: blanchedalmond;
+}
+#boton{
+    display: block;
+    margin: auto;
+    cursor: pointer;
+    font-size: 20px;
+    font-family: 'Times New Roman';
+}
+input [type="button"]:hover{
+    opacity: 1;
+}

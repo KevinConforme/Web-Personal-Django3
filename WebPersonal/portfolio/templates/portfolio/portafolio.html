@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+{% block title %} Portafolio {% endblock %}
+
+{% block background %}{% load static %} {% static 'img/portfolio-bg.jpg' %} {% endblock %}
+
+{% block header %}
+    <h1 id="q" align="center">Portafolio</h1>
+    <p align="center">Esta seccion es para almacenar el portafolio de su asignatura</p>
+    <br>
+    <a href="/admin/portfolio/project/add/"><img src="/static/img/portfolio.png" title="subir aqui" ></a>
+{% endblock %}
+
+{% block content %}
+    {% for project in projects %}
+    <div class="row project">  	
+	      	<div class="col-lg-3 col-md-4 offset-lg-1">
+			      <img class="img-fluid" src="{{ project.imagen.url }}" alt="">
+	      	</div>
+	        <div class="col-lg-7 col-md-8">
+	      		<h2 class="section-heading title">{{ project.title }}</h2>   
+	          <p>{{ project.description }}</p>
+              {% if project.infor != " " %}
+                <p><a href="{{ project.infor }}" target='_blank'>Más información</a></p>
+	            {% endif %}
+	      	</div>
+	      </div>
+    {% endfor %}
+{% endblock %}

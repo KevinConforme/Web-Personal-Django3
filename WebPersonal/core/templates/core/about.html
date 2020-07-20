@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% block title %} Acerca de {% endblock %}
+{% block background %}{% load static %} {% static 'img/about-bg.jpg' %} {% endblock %}
+{% block header %}
+    <h1 id="q" align="center"> Acerca de.. </h2>
+    <h2 id="w" align="center">Aqui encuentra informacion sobre los creadores de la web </h2>
+{% endblock %}
+{% block content %}
+<div class="container">
+      <div class="row">   
+        <div class="col-lg-3 col-md-4 offset-lg-1">
+          <img class="img-fluid avatar" src="{% static 'img/mio.jpg' %}" alt="">
+        </div>
+        <div class="col-lg-7 col-md-8">
+          <h2 class="section-heading">Kevin Conforme</h2>   
+          <p>Mi nombre es Kevin Daniel Conforme Moreira estudiante de la Universidad Tecnica de Manabi,</p>
+          <p>Estudiando la Carrera Ingenieria de Sistemas Informatico, con numero de Cedula : 131661234-8,</p>
+        </div>
+      </div>  
+    </div>
+{% endblock %}
