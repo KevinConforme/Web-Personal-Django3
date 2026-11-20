@@ -24,7 +24,7 @@ urlpatterns = [
     path('acerca/', core_views.about, name="about"),
     path('portafolio/', port_views.portfolio, name="portfolio"),
     path('contacto/', core_views.contact, name="contact"),
-    path('juegos/', core_views.juegos, name="juegos"),
+    path('juegos/', core_views.juego, name="juegos"),
     path('admin/', admin.site.urls),
 ]
 
