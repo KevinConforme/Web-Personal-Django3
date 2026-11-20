@@ -10,3 +10,6 @@ def contact(request):
 
 def about(request):
     return render(request, "core/about.html")
+
+def about(request):
+    return render(request, "core/juego.html")
