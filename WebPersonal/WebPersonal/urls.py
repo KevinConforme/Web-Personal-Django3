@@ -28,7 +28,7 @@ urlpatterns = [
     path('broma/', core_views.broma, name="broma"),
     path('pregunta/', core_views.pregunta, name="pregunta"),
     path('tres_en_raya/', core_views.tres_en_raya, name="tres_en_raya"),
-    path('pregunta_V1.1/', core_views.pregunta_V1.1, name="pregunta_V1.1"),
+    path('pregunta_V1.1/', core_views.pregunta1, name="pregunta_V1.1"),
     path('admin/', admin.site.urls),
 ]
 
