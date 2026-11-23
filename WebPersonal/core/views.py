@@ -13,3 +13,12 @@ def about(request):
 
 def juego(request):
     return render(request, "core/juego.html")
+    
+def broma(request):
+    return render(request, "core/broma.html")
+
+def pregunta(request):
+    return render(request, "core/pregunta.html")
+
+def pregunta1(request):
+    return render(request, "core/pregunta_V1.1.html")
