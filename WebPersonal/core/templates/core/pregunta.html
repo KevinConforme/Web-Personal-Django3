@@ -45,7 +45,8 @@
         <button id="btn-no" onclick="ganar()">No</button>
       </div>
     </div>
-   <div id="pista" class="oculto"></div>
+
+   <div id="pista" class="oculto"></div>
     <div id="mensaje" class="oculto">
       <h1>¡Lo sabía 😭, tienes a alguien más 😢, espero sean felices 🥹!</h1>
       <button id="btn-reiniciar" onclick="reiniciar()">Volver a intentar</button>
@@ -53,15 +54,17 @@
     <div id="mensaje2" class="oculto">
       <h1>¡No mientas, mentir es malo!</h1>
       <button id="btn-reiniciar" onclick="reiniciar()">Volver a intentar</button>
-    </div>    
+    </div>
+    
   </div>
-  <footer> Esto es una pequeña BROMITA Hecho por Kevin Conforme <p><a href="/">Regresar</a></p></footer>
+  <footer> Esto es una pequeña BROMITA Hecho por Kevin Conforme <p><a href="{% url 'juego' %}">Regresar</a></p></footer>
 
   <script>
     const btnSi = document.getElementById('btn-si');
     const frases = ["¡Casi!", "😧💔😭", "¡Muy lento!", "🥲🥲🥲", "¡Ups!", "🥹🥹🥹", "¡Yo se que quieres!", "😟😕🙁", "¡Inténtalo de nuevo!"];
     const msj = document.getElementById('pista');
-   let   intentos = 0;
+
+   let   intentos = 0;
     function mover() {
      intentos++;
       if(intentos === 10){
@@ -85,7 +88,8 @@
 
       const x = Math.max(padding, Math.random() * maxX);
       const y = Math.max(padding, Math.random() * maxY);
-     
+
+     
       // 3. Cambiar a fixed para control absoluto del viewport
       btnSi.style.position = 'fixed';
       btnSi.style.left = `${x}px`;
