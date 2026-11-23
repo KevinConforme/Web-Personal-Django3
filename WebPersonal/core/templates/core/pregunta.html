@@ -1,0 +1,127 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Broma Express</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { -webkit-user-select: none; user-select:none; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #0f172a; color: #fff; text-align: center; overflow: hidden; }
+    .card { background: #1e293b; padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 90%; max-width: 400px; }
+    .emoji-pregunta { font-size: 3rem; margin-bottom: 15px; display: block; }
+    h1 { font-size: 1.8rem; margin-bottom: 30px; }
+    .btn-container { display: flex; justify-content: center; gap: 20px; min-height: 50px; }
+    button { padding: 12px 28px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; }
+    #btn-si { background: #22c55e; color: #fff; }
+    #btn-no { background: #ef4444; color: #fff; }
+    #btn-reiniciar { background: #3b82f6; color: #fff; margin-top: 25px; }
+    .oculto { display: none !important; }
+    .pop { position: fixed; color: #facc15; font-weight: bold; font-size: 0.9rem; pointer-events: none; animation: pop 0.6s forwards; }
+    @keyframes pop { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-20px); } }
+	footer{
+	 position: absolute;
+	 bottom: 15px;
+	 font-size: 0.85rem;
+	 color: #64748b;
+	 letter-spacing: 0.5px;
+	}
+ #pista { 
+	    display : flex;
+	    color: #facc15; 
+	    font-size: 1rem; 
+		margin-top: 10px;  
+		min-height : 40px;
+	}
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div id="juego">
+      <span class="emoji-pregunta">🤔</span>
+      <h1>¿Te Quieres Casar Conmigo?</h1>
+      <div class="btn-container">
+        <button id="btn-si" onmouseover="mover()" onclick="trampa()">Si</button>
+        <button id="btn-no" onclick="ganar()">No</button>
+      </div>
+    </div>
+   <div id="pista" class="oculto"></div>
+    <div id="mensaje" class="oculto">
+      <h1>¡Lo sabía 😭, tienes a alguien más 😢, espero sean felices 🥹!</h1>
+      <button id="btn-reiniciar" onclick="reiniciar()">Volver a intentar</button>
+    </div>
+    <div id="mensaje2" class="oculto">
+      <h1>¡No mientas, mentir es malo!</h1>
+      <button id="btn-reiniciar" onclick="reiniciar()">Volver a intentar</button>
+    </div>    
+  </div>
+  <footer> Esto es una pequeña BROMITA Hecho por Kevin Conforme <p><a href="/">Regresar</a></p></footer>
+
+  <script>
+    const btnSi = document.getElementById('btn-si');
+    const frases = ["¡Casi!", "😧💔😭", "¡Muy lento!", "🥲🥲🥲", "¡Ups!", "🥹🥹🥹", "¡Yo se que quieres!", "😟😕🙁", "¡Inténtalo de nuevo!"];
+    const msj = document.getElementById('pista');
+   let   intentos = 0;
+    function mover() {
+     intentos++;
+      if(intentos === 10){
+       msj.innerText = "💡Pista: Si se mueve es porque no lo deseas en verdad";
+		      msj.classList.remove('oculto');
+      }
+      // 1. Mostrar frase flotante en la posición actual antes de moverlo
+      const rect = btnSi.getBoundingClientRect();
+      const txt = document.createElement('div');
+      txt.className = 'pop';
+      txt.style.left = `${rect.left}px`;
+      txt.style.top = `${rect.top - 15}px`;
+      txt.innerText = frases[Math.floor(Math.random() * frases.length)];
+      document.body.appendChild(txt);
+      setTimeout(() => txt.remove(), 700);
+
+      // 2. Calcular límites asegurando que el botón permanezca 100% visible en pantalla
+      const padding = 20;
+      const maxX = window.innerWidth - btnSi.offsetWidth - padding;
+      const maxY = window.innerHeight - btnSi.offsetHeight - padding;
+
+      const x = Math.max(padding, Math.random() * maxX);
+      const y = Math.max(padding, Math.random() * maxY);
+     
+      // 3. Cambiar a fixed para control absoluto del viewport
+      btnSi.style.position = 'fixed';
+      btnSi.style.left = `${x}px`;
+      btnSi.style.top = `${y}px`;
+    }
+
+    function ganar() {
+      document.getElementById('juego').classList.add('oculto');
+      document.getElementById('mensaje').classList.remove('oculto');
+      document.getElementById('mensaje2').classList.add('oculto');
+      msj.classList.add('oculto');
+      btnSi.style.display = 'none';
+    }
+    
+    function trampa() {
+      document.getElementById('juego').classList.add('oculto');
+      document.getElementById('mensaje').classList.add('oculto');
+      document.getElementById('mensaje2').classList.remove('oculto');
+      msj.classList.add('oculto');
+      btnSi.style.display = 'none';
+    }
+
+    function reiniciar() {
+      // Restablecer visibilidad
+      document.getElementById('mensaje').classList.add('oculto');
+      document.getElementById('mensaje2').classList.add('oculto');
+      document.getElementById('juego').classList.remove('oculto');
+      msj.classList.add('oculto');
+      intentos = 0;
+      // Regresar el botón "No" a su posición y estilo original dentro de la tarjeta
+      btnSi.style.display = 'inline-block';
+      btnSi.style.position = 'static';
+      btnSi.style.lef = "";
+      btnSi.style.top = "";
+    }
+  </script>
+
+</body>
+</html>
