@@ -2,7 +2,10 @@ const celdas = document.querySelectorAll('.tablero-div');
 let turnoX = true;
 let estadoX = {ganadas: 0, perdidas: 0};
 let estadoO = {ganadas: 0, perdidas: 0};
+let modoActual = 'player';
+let fichaHumano = 'X';
 
+const selecModo = document.getElementById('modo');
 const inputX = document.getElementById('nombreX');
 const inputO = document.getElementById('nombreO');
 const ganaX = document.getElementById('ganadasX');
@@ -28,14 +31,56 @@ const estilosLinea = [
     { top: '0', left: '302px', width: '427px', transform: 'rotate(135deg)' }
 ];
 
+function actualizarInterfazJugador() {
+    const esContraIA = modoActual !== 'player';
+
+    if (!esContraIA) {
+        inputX.disabled = false;
+        inputO.disabled = false;
+
+        panelX.classList.remove('bloqueado-com');
+        panelO.classList.remove('bloqueado-com');
+
+        if (inputX.value === 'La IA') inputX.value = '';
+        if (inputO.value === 'La IA') inputO.value = '';
+
+        inputX.placeholder = 'Ingresa tu nombre';
+        inputO.placeholder = 'Ingresa tu nombre';
+        return;
+    }
+
+    if (fichaHumano === 'X') {
+        // Humano es X -> panelX libre, panelO bloqueado como COM
+        inputX.disabled = false;
+        panelX.classList.remove('bloqueado-com');
+        if (inputX.value === 'La IA') inputX.value = '';
+        inputX.placeholder = 'Ingresa tu nombre';
+
+        inputO.value = 'La IA';
+        inputO.disabled = true;
+        panelO.classList.add('bloqueado-com');
+        panelO.classList.remove('activo');
+    } else {
+        // Humano es O -> panelO libre, panelX bloqueado como COM
+        inputO.disabled = false;
+        panelO.classList.remove('bloqueado-com');
+        if (inputO.value === 'La IA') inputO.value = '';
+        inputO.placeholder = 'Ingresa tu nombre';
+
+        inputX.value = 'La IA';
+        inputX.disabled = true;
+        panelX.classList.add('bloqueado-com');
+        panelX.classList.remove('activo');
+    }
+}
 function actualizarTurno() {
     if (turnoX) {
-        panelX.classList.add('activo');
+        panelX.classList.toggle('activo', !panelX.classList.contains('bloqueado-com'));
         panelO.classList.remove('activo');
         btnX.classList.add('seleccionado');
         btnO.classList.remove('seleccionado');
     } else {
-        panelO.classList.add('activo');
+        panelO.classList.toggle('activo', !panelO.classList.contains('bloqueado-com'));
         panelX.classList.remove('activo');
         btnO.classList.add('seleccionado');
         btnX.classList.remove('seleccionado');
@@ -136,3 +181,29 @@ function reiniciarJuego(){
     lineaGanadora.style.width = '0';
     actualizarTurno();
 }
+//cambio del selector contra IA
+function seleccionarFichaHumano(ficha) {
+    const tableroVacio = Array.from(celdas).every(celda => celda.textContent === '');
+    if (!tableroVacio) {
+        alert("No puedes cambiar quién empieza con una partida en curso. Termina o reinicia el juego.");
+        return;
+    }
+
+    fichaHumano = ficha;
+    turnoX = (ficha === 'X');
+    actualizarInterfazJugador();
+    actualizarTurno();
+}
+
+if (selecModo) {
+    selecModo.addEventListener('change', (e) => {
+        modoActual = e.target.value;
+        actualizarInterfazJugador();
+        reiniciarJuego();
+    });
+}
+btnX.addEventListener('click', () => seleccionarFichaHumano('X'));
+btnO.addEventListener('click', () => seleccionarFichaHumano('O'));
+
+actualizarInterfazJugador();
+actualizarTurno();
