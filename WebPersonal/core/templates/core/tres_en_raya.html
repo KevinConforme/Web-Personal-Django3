@@ -12,12 +12,9 @@ align-items: center;
 justify-content: center;
 min-height: 100vh;
 margin: 0;
-background-color: #f4f4f4;
+background-color: #aaa4a4;
 padding: 15px;
 box-sizing: border-box;
-}
-footer{
-position: absolute; bottom: 15px; font-size: 0.85rem; color: #64748b; letter-spacing: 0.5px;
 }
 .titulo{
 color: green;
@@ -165,6 +162,19 @@ select, button{
     font-size: 32px;
 }
 }
+footer{
+padding-top: 10px;
+font-size: 0.85rem; 
+color: white; 
+letter-spacing: 0.5px;
+text-align: center;
+}
+#regre{display: inline; margin: 0;}
+#lin{
+    color: rgb(65, 255, 91);
+    text-decoration: none;
+    margin-left: 4px;
+}
 </style>
 </HEAD>
 <BODY>
@@ -177,10 +187,10 @@ select, button{
 </div>
 <div class="controles">
 	<select id="modo">
+        <option value="player">Player VS Player</option>
 		<option value="easy">COM vs Easy</option>
 		<option value="medium">COM vs Medium</option>
 		<option value="difficult">COM vs difficult</option>
-		<option value="player">Player VS Player</option>
 	</select>
 	<p>&lt;-- Pronto estara activo</p> <!-- EL &lt; ACTIVA UN "<" EN MENSAJE-->
 </div>
@@ -213,7 +223,7 @@ select, button{
         <p>Perdidas: <span id="perdidasO">0</span></p>
     </div>
 </div>
-<footer> Si quieres volver a escoger pulsa <p><a href="{% url 'juego' %}">Regresar</a></p></footer>
+<footer> Si quieres volver a escoger pulsa <span id="regre"><a id="lin" href="{% url 'juego' %}">Regresar</a></span></footer>
 <script>
 const celdas = document.querySelectorAll('.tablero-div');
 let turnoX = true;
