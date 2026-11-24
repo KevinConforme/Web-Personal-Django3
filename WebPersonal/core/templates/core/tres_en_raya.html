@@ -176,6 +176,20 @@ text-align: center;
     text-decoration: none;
     margin-left: 4px;
 }
+.jugador.bloqueado-com {
+    background-color: #d6d8db;
+    border-color: #6c757d;
+    opacity: 0.72;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.jugador.bloqueado-com input {
+    background-color: #727475;
+    color: #f8f9fa;
+    cursor: not-allowed;
+}
 </style>
 </HEAD>
 <BODY>
@@ -183,8 +197,8 @@ text-align: center;
 
 <div class="selector-turno">
     <span>Empieza jugando:</span>
-    <button id="btnX" class="seleccionado" onclick="cambiarTurnoInicial(true)">EQUIS (X)</button>
-    <button id="btnO" onclick="cambiarTurnoInicial(false)">CIRCULO (O)</button>
+    <button type="button" id="btnX" class="seleccionado" >EQUIS (X)</button>
+    <button type="button" id="btnO" >CIRCULO (O)</button>
 </div>
 <div class="controles">
 	<select id="modo">
