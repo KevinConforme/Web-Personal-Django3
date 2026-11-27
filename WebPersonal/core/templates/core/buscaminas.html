@@ -1,13 +1,24 @@
-{% extends 'core/base.html' %}
 {% load static %}
 
 <Title>Buscaminas</Title>
 
 {% block extra_css %}
-<link href="{% static 'css/style.css' %}" rel="stylesheet">
+<link href="{% static 'css/buscaminas.css' %}" rel="stylesheet">
+{% endblock %}
 </HEAD>
 <BODY>
-<label><strong class="titulo">💣 Buscaminas 🚩</strong></label>
+<label><strong class="titulo">💣Buscaminas🚩</strong></label>
+<div class="info" id="info">
+	<ol><h3>Info: Cómo jugar</h3>
+		<li>Haz clic en una celda para descubrirla.</li>
+		<li>Haz clic derecho para colocar una bandera.</li>
+		<li>Descubre todas las celdas sin minas para ganar.</li>
+		<li>Si descubres una mina, pierdes el juego.</li>
+		<li>Puedes cambiar la dificultad en el menú desplegable.</li>
+		<li>¡Diviértete jugando al Buscaminas!</li>
+	</ol>
+	
+</div>
 <div class="seleccionarModo" id="seleccionarModo">
 	<label>Dificultad: </label>
 	<select class="modo" id="modo" style="cursor: pointer">
@@ -19,7 +30,11 @@
 </div>
 <div class="conteiner">
 	<div class="tablero" id="tablero">
+	
 	</div>
 </div>
+<footer>
+	<p>Este juego fue creado por: Kevin Conforme si quieres volver a escoger un juego pulsa <a href="{% 'juego ' %}">Regresar</a></p>
+</footer>
 <script src="{% static 'js/buscaminas.js' %}"></script>
 </BODY>
