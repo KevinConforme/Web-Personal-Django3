@@ -23,5 +23,5 @@ def pregunta(request):
 def tres_en_raya(request):
     return render(request, "core/tres_en_raya.html")
     
-def pregunta1(request):
-    return render(request, "core/pregunta_V1.1.html")
+def buscaminas(request):
+    return render(request, "core/buscaminas.html")
