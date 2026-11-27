@@ -1,0 +1,303 @@
+<!DOCTYPE HTML> 
+<html>
+<HEAD>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<Title>Buscaminas</Title>
+<style>
+body{
+margin: 0;
+align-items: center;
+justify-content:center;
+min-height: 90vh;
+display: flex;
+flex-direction: column;
+}
+.titulo{font-size: 40px;}
+.tablero{
+display: grid;
+gap: 4px;
+padding: 10px;
+border-radius: 10px;
+user-select: none;
+}
+.celda{
+width: 36px;
+height: 36px;
+display: flex;
+align-items: center;
+justify-content: center;
+border-radius: 5px;
+background: #1b2636;
+color: white;
+cursor: pointer;
+border: 1px solid #10151b;
+}
+label{ }
+.celda.revelada{cursor: default;}
+.number-0 { background: #dfe8ee;}
+.number-1 { color: #2b6cb0; background: #dfe8ee;}
+.number-2 { color: #2f855a; background: #dfe8ee;}
+.number-3 { color: #c05621; background: #dfe8ee;}
+.number-4 { color: #6b21a8; background: #dfe8ee;}
+.number-5 { color: #b91c1c; background: #dfe8ee;}
+.number-6 { color: #0ea5a4; background: #dfe8ee;}
+.number-7 { color: #0f1724; background: #dfe8ee;}
+.number-8 { color: #94a3b8; background: #dfe8ee;}
+.mina{background: #ff6b6b;}
+</style>
+</HEAD>
+<BODY>
+<label><strong class="titulo">💣 Buscaminas 🚩</strong></label>
+<div class="seleccionarModo" id="seleccionarModo">
+	<label>Dificultad: </label>
+	<select class="modo" id="modo" style="cursor: pointer">
+		<option value="8"> Facil - 8x8 / 10 minas</option>
+		<option value="16"> Medio - 16x16 / 40 minas</option>
+		<option value="24"> Dificil - 16x24 / 65 minas</option>
+	</select>
+	<button style="cursor: pointer" id="reiniciar" >Reiniciar </button>
+</div>
+<div class="conteiner">
+	<div class="tablero" id="tablero">
+	
+	</div>
+</div>
+
+<script>
+//se inicializa las variables a usar
+let tableroDatos = [];
+let mina = 10;
+let totalFila = 8;
+let totalColumna = 8;
+let juegoTerminado = false;
+let juegoIniciado = false;
+let conBandera = mina;
+const btnReiniciar = document.getElementById("reiniciar");
+const tablero = document.getElementById("tablero");
+const modo = document.getElementById("modo");
+//evaluamos el modo escoger para crear el tablero respectivo
+modo.addEventListener('change', () =>{
+	switch(Number(modo.value)){
+		case 8:
+			crearTablero(8, 8);
+			break;
+		case 16:
+			crearTablero(16, 16);
+			break;
+		case 24:
+			crearTablero(16, 24);
+			break;
+	}
+});
+
+function crearTablero(f, c){
+	juegoIniciado = false;
+	juegoTerminado = false;
+	modo.disabled = false;
+	totalFila = f;
+	totalColumna = c;
+	tablero.innerHTML = '';
+	tableroDatos = [];
+	tablero.style.gridTemplateColumns = `repeat(${c}, 36px)`;
+		//recorremos un arreglo con los parametros ingresado
+		for(let fila=0; fila<f; fila++){
+			//guardamos cuantas filas creamos
+			tableroDatos [fila] = [];
+			for(let columna=0; columna<c; columna++){
+				//guardamos cuantas filsa y columnas creamos
+				tableroDatos [fila][columna] = 0;
+				//creamos los div necesario para el tablero 
+				const celda = document.createElement("div");
+				celda.className = "celda";
+				celda.dataset.r = fila;
+				celda.dataset.c = columna;	
+				//le agregamos eventos a cada celda
+				celda.addEventListener("click", descubrirCelda);
+				//celda.addEventListener("contextmenu", bandera);
+				tablero.appendChild(celda);	
+		}
+	}
+//llamos las funciones a usar
+colocarMinas(f, c);
+calcularNumero(f, c);
+//mostamos por consola para verificar que todo salga correcto
+console.table(tableroDatos);
+console.log("💣: ", mina);
+//console.log("🚩: ", conBandera);
+}
+
+function colocarMinas(f, c){
+	let colocadas = 0;
+	//validamos cual es el modo para crear las minas respectivas
+	if (Number(modo.value) === 8){
+		mina = 10;
+	}else if(Number(modo.value) === 16){
+		mina = 40;
+	}else if(Number(modo.value) === 24 ){
+		mina = 65;
+	}
+	//colocamos las minas de forma aleatoria
+	while(colocadas < mina){
+		const fila = Math.floor(Math.random() * f);
+		const columna = Math.floor(Math.random() * c);
+		if(tableroDatos[fila][columna] !== '💣'){
+			tableroDatos[fila][columna] = '💣';
+			colocadas++;
+		}
+	}
+}
+
+function calcularNumero(f, c){
+	//recorremos el array para saber donde estas las minas
+	for(let fila=0; fila<f; fila++){
+		for(let columna=0; columna<c; columna++){
+			if(tableroDatos[fila][columna] === '💣')
+				continue;
+			let contador = 0;
+			//recorremos el array de las 8 celdas vecinas 
+			for(let filas=-1; filas<=1; filas++){
+				for(let columnas=-1; columnas<=1; columnas++){
+					if(filas === 0 && columnas === 0)continue;
+					const mf = fila+filas, mc = columna+columnas;
+					//contamos cuantas minas tenemos en las 8 posiciones vecinas
+					if(mf>=0 && mf<f && mc>=0 && mc<c && tableroDatos[mf][mc] === '💣') {contador++;}
+				}
+			}
+			//colocamos los numero correspondinte en el array 
+			tableroDatos[fila][columna] = contador;
+		}
+	}
+}
+
+function mostrar(f, c){
+	//verifica las celdas que ya han sido mostrada
+	const el = tablero.querySelector(`.celda[data-r="${f}"][data-c="${c}"]`);
+	if(!el || el.classList.contains("revelada"))return;
+	//asignamos la posicion a valor y agregamos la clase revelada 
+	const valor = tableroDatos[f][c];
+	el.classList.add("revelada");
+	//comparamos para saber si es mina o 0 para cambiar el 0 por espacio vacio
+	if(valor === '💣'){
+        revelarMinas();
+		setTimeout(()=>{alert("Perdiste pisaste una mina");},250);
+		juegoIniciado = false;
+		modo.disabled = false;
+		return;
+    }else{
+		if(verificarWin()){
+			juegoTerminado = true;
+			juegoIniciado = false;
+			modo.disabled = false;
+			setTimeout(()=>{alert("victoria");},10);
+		}
+		//mostramos numeros y cambiamos los 0 por espacios vacios
+        el.textContent = valor === 0 ? "" : valor;
+        el.classList.add(`number-${valor}`);
+		
+    }
+}
+function descubrirCelda(e){
+	if(!juegoIniciado){
+		juegoIniciado = true;
+		modo.disabled = true;
+	}
+	if(juegoTerminado)return;
+	const fila = Number(e.target.dataset.r);
+	const columna = Number(e.target.dataset.c);
+	const valor = tableroDatos[fila][columna];
+	//llamamos la funcion mostrar 
+	mostrar(fila, columna);
+	//comparamos para descubrir las celdas vacias
+	if(valor === 0){
+		descubrirVacias(fila, columna);
+	}
+}
+
+function descubrirVacias(f, c){
+	//comparamos los 8 vecinos
+	for(let filas=-1; filas<=1; filas++){
+		for(let columnas=-1; columnas<=1; columnas++){
+			//comparamos la posicion y la saltamos con continue
+			if(filas === 0 && columnas === 0) continue;
+				const mf = f+filas, mc = c+columnas;
+				//verificamos limites del tablero
+			    if(mf<0 || mf>=totalFila || mc<0 || mc>=totalColumna)continue;
+				const laVecina = tablero.querySelector(`.celda[data-r="${mf}"][data-c="${mc}"]`);
+				const valorVecina = tableroDatos[mf][mc];
+				//verificamos si es mina o revelada y la saltamos
+				if(!laVecina || laVecina.classList.contains("revelada") || valorVecina === '💣')continue;
+				//revelamos la vecina
+				mostrar(mf, mc);
+				//si la vecina vale 0 se sigue revelando
+				if(valorVecina === 0){
+					descubrirVacias(mf, mc);
+				}
+		}
+	}
+}
+
+function revelarMinas(){
+	for(let fila=0; fila<totalFila; fila++){
+		for(let columna=0; columna<totalColumna; columna++){
+			if(tableroDatos[fila][columna] === '💣'){
+				//buscamos las demas minas en el tablero
+				const celda = tablero.querySelector(`.celda[data-r="${fila}"][data-c="${columna}"]`);
+				celda.classList.add("mina");
+				celda.textContent = '💣';
+			}
+		}
+	}
+juegoTerminado = true;
+//recorremos el arreglo y le quitamos la manito a las celdas
+ document.querySelectorAll(".celda").forEach(celda => {
+	celda.style.pointerEvents = "none";
+	celda.style.cursor= "default";
+ });
+}
+
+function verificarWin(){
+	const victoria = (totalFila*totalColumna)-mina;
+	let conRevelada =0;
+	for(let fila=0; fila<totalFila; fila++){
+		for(let columna=0; columna<totalColumna; columna++){
+			const celda = tablero.querySelector(`.celda[data-r="${fila}"][data-c="${columna}"]`);
+			if(celda.classList.contains("revelada") && !(tableroDatos[fila][columna] === '💣'))conRevelada++;
+		}
+	}if (conRevelada === victoria){
+		//recorremos el arreglo y le quitamos la manito a las celdas
+		document.querySelectorAll(".celda").forEach(celda => {
+			celda.style.pointerEvents = "none";
+			celda.style.cursor= "default";
+		});
+		return true;
+	}
+	
+	return false;
+}
+/*
+function bandera(e){
+	e.preventDefault();
+	const celda = e.target;
+	if(celda.classList.contains("revelada"))return;
+	if(celda.textContent === '🚩'){
+		celda.textContent = '';
+		conBandera++;
+	}else{
+		celda.textContent = '🚩';
+		conBandera--;
+		if(conBandera < 0){celda.textContent='';}
+	}
+}*/
+crearTablero(8, 8);
+//boton para reiniciar el tablero dependiendo del tipo de dificultad
+btnReiniciar.addEventListener("click", () => crearTablero(totalFila, totalColumna));
+
+/* GLOSARIO
+filas y columnas / es para el desplasamiento 
+fila y columna / es para crear el array 
+f y c / son los valores para creacion del tablero
+mf y mc / son para marcar la pisicion de las filas y columnas
+*/
+</script>
+</BODY>
+</HTML>
