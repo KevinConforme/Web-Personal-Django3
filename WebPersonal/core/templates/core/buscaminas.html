@@ -6,7 +6,7 @@
 <link href="{% static 'css/buscaminas.css' %}" rel="stylesheet">
 {% endblock %}
 </HEAD>
-<BODY>
+BODY>
 <label><strong class="titulo">💣Buscaminas🚩</strong></label>
 <div class="info" id="info">
 	<ol><h3>Info: Cómo jugar</h3>
@@ -21,20 +21,24 @@
 </div>
 <div class="seleccionarModo" id="seleccionarModo">
 	<label>Dificultad: </label>
-	<select class="modo" id="modo" style="cursor: pointer">
+	<select class="modo" id="modo" ">
 		<option value="8"> Facil - 8x8 / 10 minas</option>
 		<option value="16"> Medio - 16x16 / 40 minas</option>
 		<option value="24"> Dificil - 16x24 / 65 minas</option>
 	</select>
-	<button style="cursor: pointer" id="reiniciar" >Reiniciar </button>
+	<button id="reiniciar" >Reiniciar </button>
 </div>
 <div class="conteiner">
 	<div class="tablero" id="tablero">
 	
 	</div>
 </div>
+<div class="marcador" id="marcador">
+	<span>🚩 Banderas: <strong id="contador-banderas">10</strong></span>
+	<span>⏳ Tiempo:  <strong id="time">00:00</strong></span>	
+	<span>Mejor Tiempo: <strong id="mejor-time">00:00</strong></span>
+</div>
 <footer>
-	<p>Este juego fue creado por: Kevin Conforme si quieres volver a escoger un juego pulsa <a href="{% url 'juego' %}">Regresar</a></p>
-</footer>
-<script src="{% static 'js/buscaminas.js' %}"></script>
+	<p>Este juego fue creado por: Kevin Conforme si quieres volver a escoger un juego pulsa <a href="#">Regresar</a></p>
+</footer><script src="{% static 'js/buscaminas.js' %}"></script>
 </BODY>
