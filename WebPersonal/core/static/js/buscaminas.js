@@ -5,8 +5,13 @@ let totalColumna = 8;
 let juegoTerminado = false;
 let juegoIniciado = false;
 let conBandera = mina;
-const btnReiniciar = document.getElementById("reiniciar");
+let time = 0;
+let intervaloTime = null;
 const tablero = document.getElementById("tablero");
+const marcadorBadnera = document.getElementById("contador-banderas");
+const btnReiniciar = document.getElementById("reiniciar");
+const tiempo = document.getElementById("time");
+const mejorTime = document.getElementById("mejor-time");
 const modo = document.getElementById("modo");
 //evaluamos el modo escoger para crear el tablero respectivo
 modo.addEventListener('change', () =>{
@@ -26,6 +31,8 @@ modo.addEventListener('change', () =>{
 function crearTablero(f, c){
 	juegoIniciado = false;
 	juegoTerminado = false;
+	tablero.classList.remove("bloqueado");
+	reiniciarTime();
 	modo.disabled = false;
 	conBandera = mina;
 	totalFila = f;
@@ -53,7 +60,9 @@ function crearTablero(f, c){
 	}
 //llamos las funciones a usar
 colocarMinas(f, c);
+actualizaBandera();
 calcularNumero(f, c);
+mejorTiempo();
 //mostamos por consola para verificar que todo salga correcto
 console.table(tableroDatos);
 console.log("💣: ", mina);
@@ -119,7 +128,9 @@ function mostrar(f, c){
 		juegoIniciado = false;
 		modo.disabled = false;
         revelarMinas();
-		setTimeout(()=>{alert("Perdiste pisaste una mina");},250);
+		requestAnimationFrame(() => { setTimeout(()=>{alert("💥 !Perdiste¡ pisaste una mina 💀");},250);});
+		clearInterval(intervaloTime);
+		intervaloTime = null;
 		return;
     }
 		//mostramos numeros y cambiamos los 0 por espacios vacios
@@ -132,6 +143,7 @@ function descubrirCelda(e){
 	if(!celda)return;
 	if(!juegoIniciado){
 		juegoIniciado = true;
+		iniciarTime();
 		modo.disabled = true;
 	}
 	const fila = Number(celda.dataset.r);
@@ -148,8 +160,9 @@ function descubrirCelda(e){
 		juegoTerminado = true;
 		juegoIniciado = false;
 		modo.disabled = false;
-		setTimeout(()=>{alert("Ganaste");},250);
-
+		requestAnimationFrame(() => {(setTimeout(()=>{alert("🏆 !Ganaste¡ Superaste este Nivel 🏅");},250));});
+		clearInterval(intervaloTime);
+		intervaloTime = null;
 	}
 }
 
@@ -188,11 +201,7 @@ function revelarMinas(){
 		}
 	}
 juegoTerminado = true;
-//recorremos el arreglo y le quitamos la manito a las celdas
- document.querySelectorAll(".celda").forEach(celda => {
-	celda.style.pointerEvents = "none";
-	celda.style.cursor= "default";
- });
+tablero.classList.add("bloqueado");
 }
 
 function verificarWin(){
@@ -204,14 +213,10 @@ function verificarWin(){
 			if(celda.classList.contains("revelada") && !(tableroDatos[fila][columna] === '💣'))conRevelada++;
 		}
 	}if (conRevelada === victoria){
-		//recorremos el arreglo y le quitamos la manito a las celdas
-		document.querySelectorAll(".celda").forEach(celda => {
-			celda.style.pointerEvents = "none";
-			celda.style.cursor= "default";
-		});
+		tablero.classList.add("bloqueado");
+		guardarTiempo(time);
 		return true;
 	}
-	
 	return false;
 }
 
@@ -220,6 +225,7 @@ function bandera(e){
 	if(juegoTerminado)return;
 	if(!juegoIniciado){
 		juegoIniciado = true;
+		iniciarTime();
 		modo.disabled = true;
 	}
 	const celda = e.target.closest(".celda") || e.target;
@@ -227,12 +233,60 @@ function bandera(e){
 	if(celda.textContent === '🚩' ){
 		celda.textContent = '';
 		conBandera++;
+		actualizaBandera();
 		return;
 	}
 	if(conBandera > 0){
 		celda.textContent = '🚩';
 		conBandera--;
-		
+		actualizaBandera();
+	}
+}
+
+function actualizaBandera(){
+	if(marcadorBadnera){
+		marcadorBadnera.textContent = conBandera;
+	}
+
+}
+
+function iniciarTime(){
+	if(intervaloTime)return;
+	intervaloTime = setInterval(() => {
+		time++;
+		if(tiempo) tiempo.textContent = formatearTime(time);
+	}, 1000);
+}
+
+function formatearTime(seg){
+	const minuto = String(Math.floor(seg/60)).padStart(2, "0");
+	const s = String(seg % 60).padStart(2, "0");
+	return `${minuto}:${s}`;
+}
+
+function reiniciarTime(){
+	clearInterval(intervaloTime);
+	intervaloTime = null;
+	time = 0;
+	if(tiempo) tiempo.textContent = "00:00";
+}
+
+function tiempoModo(){
+	return `buscaminas_mejor_tiempo_${modo.value}`;
+}
+
+function mejorTiempo(){
+	if(!mejorTime) return;
+	const record = localStorage.getItem(tiempoModo());
+	mejorTime.textContent= record ? formatearTime(Number(record)) : "--:--";
+}
+
+function guardarTiempo(mejorSegundos){
+	const clave = tiempoModo();
+	const recordTime = localStorage.getItem(clave);
+	if(!recordTime || mejorSegundos < Number(recordTime)){
+		localStorage.setItem(clave, String(mejorSegundos));
+		mejorTiempo();
 	}
 }
 crearTablero(8, 8);
